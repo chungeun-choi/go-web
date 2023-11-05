@@ -19,5 +19,5 @@ func BarHandler(w http.ResponseWriter, r *http.Request) {
 	if name == "" {
 		name = "World"
 	}
-	fmt.Fprint(w, "Hello %s!", name)
+	fmt.Fprintf(w, "Hello %s!", name)
 }
