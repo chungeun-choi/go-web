@@ -1,43 +1,52 @@
 package myapp
 
 import (
-	"bytes"
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
 	"net/http"
 	"net/http/httptest"
+	"strings"
 	"testing"
 )
 
-var user_mux = NewMux()
-
-func TestExamHandler(t *testing.T) {
+func TestExamHadler_WithOutJson(t *testing.T) {
 	test := assert.New(t)
-	userData := &User{
-		FirstName: "CHOi",
-		LastName:  "EUN",
-		Email:     "3310223@naver.com",
-	}
-	jsonUserData, err := json.Marshal(userData)
+	res := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/user", nil)
 
-	if err != nil {
-		t.Fatal("Error in work to convert json data struct")
-	}
+	user_mux := NewMux()
+	user_mux.HandleFunc("/user", ReadJsonHandler)
+	user_mux.ServeHTTP(res, req)
+
+	test.Equal(http.StatusBadRequest, res.Code)
+}
+
+func TestExamHandler_WithJson(t *testing.T) {
+	test := assert.New(t)
+	requestData := `{"first_name":"choi","last_name":"eun","email":"3310223@naver.com"}`
 
 	res := httptest.NewRecorder()
 	/*
-		json 타입으로 encoding 된 데이터를 request 객체에 담기위해서는 Buffer 형태의 데이터로
-		변환이 필요함 따라서 bytes.NewBuffer() 함수를 통해 디코딩하는 과정이 필요로 함
+		json string 타입의 데이터는 결국 string 데이터 타입임에 따라 strings.NewReader 함수를 통해
+		bytes 리스트 객체로 변환하는 과정이 필요로 함
 	*/
+	req := httptest.NewRequest("GET", "/user", strings.NewReader(requestData))
 
-	req := httptest.NewRequest("GET", "/user", bytes.NewBuffer(jsonUserData))
-
+	user_mux := NewMux()
 	user_mux.HandleFunc("/user", ReadJsonHandler)
 	user_mux.ServeHTTP(res, req)
 
 	test.Equal(http.StatusOK, res.Code)
 
 	/*
-		비교하고자하는 구조체와
+		body 데이터를 테스팅하는 과정
+		1) 변환하고자 하는 구조체의 객체를 생성
+		2) response.body에 저장되어진 데이터를 json decoding 진행
+		3) 변환한 결과에서 err가 없는 지 확인
+		4) 변환하고자 하는 객체에 알맞은 값이 디코딩되어 있는 필드를 확인
 	*/
+	user := new(User)
+	err := json.NewDecoder(res.Body).Decode(user)
+	test.Nil(err)
+	test.Equal("choi", user.FirstName)
 }
