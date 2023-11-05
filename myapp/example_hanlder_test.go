@@ -11,6 +11,19 @@ import (
 // 테스트 코드 내에서 사용하게될 공용 변수인 mux를 전역변수 처리
 var mux = NewMux()
 
+// 'example_handler.go' 패키지에서 정의한 FooHandler 객체를 테스트하는 함수
+func TestExampleFooHandelr(t *testing.T) {
+	test := assert.New(t)
+	res := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/foo", nil)
+
+	mux.Handle("/foo", &FooHandler{})
+	mux.ServeHTTP(res, req)
+
+	data, _ := ioutil.ReadAll(res.Body)
+	test.Equal("Hello foo", string(data))
+}
+
 /*
 'example_handler.go' 패키지에서 정의한 barhandler 함수를 테스트하는 함수
 */
@@ -30,4 +43,22 @@ func TestExampleBarHanlder_WithOutName(t *testing.T) {
 	test.Equal(http.StatusOK, res.Code)
 	data, _ := ioutil.ReadAll(res.Body)
 	test.Equal("Hello World!", string(data))
+}
+
+/*
+공통된 영역을 처리하기위한 테스트 생명주기 설정이 필요
+생명 주기에 필요한 요소로 판단되는 부분
+1) mux 객체에 테스트하고자하는 함수 정의
+2) 공통 변수 생성 및 초기화 로직이 필요
+3) req 데이터 res 데이터 정합성을 위한 table driven 정의
+*/
+func TestExampleBarHanlder_WithName(t *testing.T) {
+	test := assert.New(t)
+	res := httptest.NewRecorder()
+	req := httptest.NewRequest("GET", "/bar?name=CHOI", nil)
+
+	mux.ServeHTTP(res, req)
+
+	data, _ := ioutil.ReadAll(res.Body)
+	test.Equal("Hello CHOI!", string(data))
 }
