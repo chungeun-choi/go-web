@@ -23,6 +23,7 @@ func NewMux() http.Handler {
 	// item handler 추가
 	router.HandleFunc("/item/{number:[0-9]+}", handler.GetItemHandler).Methods("GET")
 	router.HandleFunc("/item", handler.CreateItemHanlder).Methods("POST")
-
+	router.HandleFunc("/item/{number:[0-9]+}", handler.DeleteItemHandler).Methods("DELETE")
+	router.HandleFunc("/item/{number:[0-9]+}", handler.UpdateItemHandler).Methods("PUT")
 	return router
 }
