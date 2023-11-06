@@ -14,7 +14,7 @@ func TestExamHadler_WithOutJson(t *testing.T) {
 	res := httptest.NewRecorder()
 	req := httptest.NewRequest("GET", "/user", nil)
 
-	user_mux := NewMux()
+	user_mux := http.NewServeMux()
 	user_mux.HandleFunc("/user", ReadJsonHandler)
 	user_mux.ServeHTTP(res, req)
 
@@ -32,7 +32,7 @@ func TestExamHandler_WithJson(t *testing.T) {
 	*/
 	req := httptest.NewRequest("GET", "/user", strings.NewReader(requestData))
 
-	user_mux := NewMux()
+	user_mux := http.NewServeMux()
 	user_mux.HandleFunc("/user", ReadJsonHandler)
 	user_mux.ServeHTTP(res, req)
 

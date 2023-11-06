@@ -9,7 +9,7 @@ import (
 )
 
 // 테스트 코드 내에서 사용하게될 공용 변수인 mux를 전역변수 처리
-var exam_mux = NewMux()
+var exam_mux = http.NewServeMux()
 
 // 'example_handler.go' 패키지에서 정의한 FooHandler 객체를 테스트하는 함수
 func TestExampleFooHandelr(t *testing.T) {
