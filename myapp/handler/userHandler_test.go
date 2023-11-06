@@ -1,8 +1,9 @@
-package myapp
+package handler
 
 import (
 	"encoding/json"
 	"github.com/stretchr/testify/assert"
+	"go_web/myapp"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -12,7 +13,7 @@ import (
 func TestExamHadler_WithOutJson(t *testing.T) {
 	test := assert.New(t)
 	// mock server를 통해 테스트를 진행할 수 있도록 변형
-	mockServer := httptest.NewServer(NewMux())
+	mockServer := httptest.NewServer(myapp.NewMux())
 	defer mockServer.Close()
 
 	resp, err := http.Get(mockServer.URL + "/user")
@@ -63,7 +64,7 @@ func TestUserWithJson(t *testing.T) {
 	*/
 	test := assert.New(t)
 	requestData := `{"first_name":"choi","last_name":"eun","email":"3310223@naver.com"}`
-	mockServer := httptest.NewServer(NewMux())
+	mockServer := httptest.NewServer(myapp.NewMux())
 	defer mockServer.Close()
 
 	resp, err := http.Post(mockServer.URL+"/user", "application/json", strings.NewReader(requestData))

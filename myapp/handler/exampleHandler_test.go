@@ -1,7 +1,8 @@
-package myapp
+package handler
 
 import (
 	"github.com/stretchr/testify/assert"
+	"go_web/myapp"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -11,7 +12,7 @@ import (
 // 테스트 코드 내에서 사용하게될 공용 변수인 mux를 전역변수 처리
 var exam_mux = http.NewServeMux()
 
-// 'example_handler.go' 패키지에서 정의한 FooHandler 객체를 테스트하는 함수
+// 'exampleHandler.go' 패키지에서 정의한 FooHandler 객체를 테스트하는 함수
 func TestExampleFooHandelr(t *testing.T) {
 	test := assert.New(t)
 	res := httptest.NewRecorder()
@@ -25,7 +26,7 @@ func TestExampleFooHandelr(t *testing.T) {
 }
 
 /*
-'example_handler.go' 패키지에서 정의한 barhandler 함수를 테스트하는 함수
+'exampleHandler.go' 패키지에서 정의한 barhandler 함수를 테스트하는 함수
 */
 func TestExampleBarHanlder_WithOutName(t *testing.T) {
 	// assert 객체를 사용하기위해 생성
@@ -65,7 +66,7 @@ func TestExampleBarHanlder_WithName(t *testing.T) {
 
 func TestExampleBarHanlder_gorilla(t *testing.T) {
 	test := assert.New(t)
-	mockServer := httptest.NewServer(NewMux())
+	mockServer := httptest.NewServer(myapp.NewMux())
 	defer mockServer.Close()
 
 	resp, err := http.Get(mockServer.URL + "/bar/choi")
