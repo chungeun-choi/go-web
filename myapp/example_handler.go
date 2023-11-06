@@ -2,6 +2,7 @@ package myapp
 
 import (
 	"fmt"
+	"github.com/gorilla/mux"
 	"net/http"
 )
 
@@ -17,7 +18,17 @@ func BarHandler(w http.ResponseWriter, r *http.Request) {
 	name := r.URL.Query().Get("name")
 
 	if name == "" {
-		name = "World"
+		name = "Unknown"
 	}
 	fmt.Fprintf(w, "Hello %s!", name)
+
+}
+
+func BarWithQeuryHandler(w http.ResponseWriter, r *http.Request) {
+	/*
+		Gorilla mux를 통해 '/bar' 뒤에는 요소를 파싱하도록 처리하는 핸들러
+		[ex] /bar/choi -> Hello choi user 출력
+	*/
+	vars := mux.Vars(r)
+	fmt.Fprintf(w, "Hello %s user", vars["name"])
 }

@@ -1,20 +1,24 @@
 package myapp
 
-import "net/http"
+import (
+	"github.com/gorilla/mux"
+	"net/http"
+)
 
-func NewMux() *http.ServeMux {
-	mux := http.NewServeMux()
+func NewMux() http.Handler {
+	router := mux.NewRouter()
 
 	// handler 추가 및 정의
 	// example headler 추가 - handler 구조체를 전달 받는 방법
-	mux.Handle("/foo", &FooHandler{})
+	router.Handle("/foo", &FooHandler{})
 	// example handler 추가 - handler 함수를 전달받아 처리하는 방법
-	mux.HandleFunc("/bar", BarHandler)
+	router.HandleFunc("/bar", BarHandler)
+	router.HandleFunc("/bar/{name:[a-z]+}", BarWithQeuryHandler)
 	// user handler 추가
-	mux.HandleFunc("/user", ReadJsonHandler)
+	router.HandleFunc("/user", ReadJsonHandler)
 	// file upload handler 추가
-	mux.HandleFunc("/uploads", FileHandler)
-	mux.Handle("/", http.FileServer(http.Dir("./public")))
+	router.HandleFunc("/uploads", FileHandler)
+	router.Handle("/", http.FileServer(http.Dir("./public")))
 
-	return mux
+	return router
 }
