@@ -42,7 +42,7 @@ func TestExampleBarHanlder_WithOutName(t *testing.T) {
 	// assertration 객체의 Equal 함수를 통해 원하는 값이 전달되었는지 확인
 	test.Equal(http.StatusOK, res.Code)
 	data, _ := ioutil.ReadAll(res.Body)
-	test.Equal("Hello World!", string(data))
+	test.Equal("Hello Unknown!", string(data))
 }
 
 /*
@@ -61,4 +61,18 @@ func TestExampleBarHanlder_WithName(t *testing.T) {
 
 	data, _ := ioutil.ReadAll(res.Body)
 	test.Equal("Hello CHOI!", string(data))
+}
+
+func TestExampleBarHanlder_gorilla(t *testing.T) {
+	test := assert.New(t)
+	mockServer := httptest.NewServer(NewMux())
+	defer mockServer.Close()
+
+	resp, err := http.Get(mockServer.URL + "/bar/choi")
+	if err != nil {
+		t.Fatal(http.StatusBadRequest)
+	}
+	data, _ := ioutil.ReadAll(resp.Body)
+	test.Equal("Hello choi user", string(data))
+
 }
