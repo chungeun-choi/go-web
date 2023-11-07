@@ -2,7 +2,6 @@ package handler
 
 import (
 	"github.com/stretchr/testify/assert"
-	"go_web/myapp"
 	"io/ioutil"
 	"net/http"
 	"net/http/httptest"
@@ -66,7 +65,7 @@ func TestExampleBarHanlder_WithName(t *testing.T) {
 
 func TestExampleBarHanlder_gorilla(t *testing.T) {
 	test := assert.New(t)
-	mockServer := httptest.NewServer(myapp.NewMux())
+	mockServer := httptest.NewServer(NewMux())
 	defer mockServer.Close()
 
 	resp, err := http.Get(mockServer.URL + "/bar/choi")
