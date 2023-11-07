@@ -64,6 +64,7 @@ func UpdateItem(n int, p io.Reader) (*Item, error) {
 
 	changeItem := new(Item)
 	err := json.NewDecoder(p).Decode(changeItem)
+	changeItem.Id = n
 	if err != nil {
 		return nil, err
 	}
