@@ -1,7 +1,7 @@
 package main
 
 import (
-	router "go_web/myapp"
+	router "go_web/myapp/handler"
 	"net/http"
 )
 
